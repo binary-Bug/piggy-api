@@ -31,5 +31,10 @@ app.UseAuthorization();
 app.UseCors("MyOrigins");
 
 app.MapControllers();
-
+app.Logger.LogInformation("\n*************************************************************\n");
+app.Logger.LogCritical("\nwebapi starting\n");
+app.Logger.LogInformation("\n*************************************************************\n");
 app.Run();
+app.Logger.LogInformation("\n*************************************************************\n");
+app.Logger.LogInformation("\nwebapi started running succesfully\n");
+app.Logger.LogInformation("\n*************************************************************\n");
