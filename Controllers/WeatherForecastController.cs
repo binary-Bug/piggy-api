@@ -1,3 +1,4 @@
+using AngularWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AngularWebApi.Controllers
@@ -12,11 +13,13 @@ namespace AngularWebApi.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly AppDBContext appDBContext;
         public static int count = 0;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, AppDBContext appDBContext)
         {
             _logger = logger;
+            this.appDBContext = appDBContext;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
@@ -44,6 +47,13 @@ namespace AngularWebApi.Controllers
         {
             _logger.LogInformation(wf.ToString());
             return "posted";
+        }
+
+        [HttpGet("/product")]
+        public List<Product> GetProduct()
+        {
+            _logger.LogInformation("get request for product from client #" + ++count);
+            return appDBContext.Product.ToList();
         }
     }
 }
