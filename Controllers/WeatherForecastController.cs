@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AngularWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -22,7 +22,7 @@ namespace AngularWebApi.Controllers
             this.appDBContext = appDBContext;
         }
 
-        [HttpGet("[controller]/get/v1",Name = "GetWeatherForecast")]
+        [HttpGet("get/v1",Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
             _logger.LogInformation("get request from client #" + ++count);
@@ -35,14 +35,14 @@ namespace AngularWebApi.Controllers
             .ToArray();
         }
 
-        [HttpGet("[controller]/get/v2")]
+        [HttpGet("get/v2")]
         public IEnumerable<WeatherForecast> Getv2()
         {
             _logger.LogInformation("get request from client #" + ++count);
             return appDBContext.WeatherForecasts.ToList();
         }
 
-        [HttpPost("[controller]/post")]
+        [HttpPost("post")]
         public string Post(WeatherForecast wf)
         {
             _logger.LogInformation(wf.ToString());
