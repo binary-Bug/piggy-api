@@ -11,7 +11,6 @@ namespace AngularWebApi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-           
             migrationBuilder.CreateTable(
                 name: "WeatherForecasts",
                 columns: table => new
@@ -31,7 +30,6 @@ namespace AngularWebApi.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
             migrationBuilder.DropTable(
                 name: "WeatherForecasts");
         }

@@ -10,14 +10,10 @@ namespace AngularWebApi.Models
         {
         }
         public virtual DbSet<WeatherForecast> WeatherForecasts { get; set; }
-        public virtual DbSet<Product> Product { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<WeatherForecast>(entity => {
                 entity.HasKey(k => k.Id);
-            });
-            modelBuilder.Entity<Product>(entity => {
-                entity.HasKey(k => k.PersonID);
             });
             OnModelCreatingPartial(modelBuilder);
         }

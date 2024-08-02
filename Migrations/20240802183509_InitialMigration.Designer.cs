@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AngularWebApi.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240727053643_InitialMigration")]
+    [Migration("20240802183509_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -24,31 +24,6 @@ namespace AngularWebApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AngularWebApi.Models.Product", b =>
-                {
-                    b.Property<int>("PersonID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PersonID"));
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PersonID");
-
-                    b.ToTable("Product");
-                });
 
             modelBuilder.Entity("AngularWebApi.Models.WeatherForecast", b =>
                 {

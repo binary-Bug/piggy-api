@@ -22,7 +22,7 @@ namespace AngularWebApi.Controllers
             this.appDBContext = appDBContext;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
+        [HttpGet("[controller]/get/v1",Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
             _logger.LogInformation("get request from client #" + ++count);
@@ -35,25 +35,20 @@ namespace AngularWebApi.Controllers
             .ToArray();
         }
 
-        [HttpPost("/postv1")]
-        public string Post([FromBody] WeatherForecast wf)
+        [HttpGet("[controller]/get/v2")]
+        public IEnumerable<WeatherForecast> Getv2()
         {
-            _logger.LogInformation(wf.ToString());
-            return "posted";
+            _logger.LogInformation("get request from client #" + ++count);
+            return appDBContext.WeatherForecasts.ToList();
         }
 
-        [HttpPost("/postv2")]
-        public string Postv2(WeatherForecast wf)
+        [HttpPost("[controller]/post")]
+        public string Post(WeatherForecast wf)
         {
             _logger.LogInformation(wf.ToString());
+            appDBContext.WeatherForecasts.Add(wf);
+            appDBContext.SaveChanges();
             return "posted";
-        }
-
-        [HttpGet("/product")]
-        public List<Product> GetProduct()
-        {
-            _logger.LogInformation("get request for product from client #" + ++count);
-            return appDBContext.Product.ToList();
         }
     }
 }
