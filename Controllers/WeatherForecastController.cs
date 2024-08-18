@@ -43,7 +43,7 @@ namespace AngularWebApi.Controllers
         {
             appDBContext.WeatherForecasts.Add(wf);
             appDBContext.SaveChanges();
-            return "posted";
+            return "Succesully Posted\n"+wf.ToString();
         }
     }
 }
