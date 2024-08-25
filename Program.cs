@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-
+//added random data
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
