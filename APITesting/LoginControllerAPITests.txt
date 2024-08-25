@@ -1,0 +1,13 @@
+API Tester url - https://reqbin.com/
+
+Post Tests:
+{
+	[post data to db:
+		post url - https://dotnet-sql.azurewebsites.net/api/login
+		post body - 
+				{
+				  "usernameoremail": "testuser1@mail.com",
+				  "password": "User1pass!"
+				}
+	],
+}
