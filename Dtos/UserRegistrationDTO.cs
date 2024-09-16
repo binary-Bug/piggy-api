@@ -18,6 +18,9 @@ namespace AngularWebApi.Dtos
         public string PhoneNumber {  get; set; } = string.Empty;
 
         [Required]
+        public int RegionId { get; set; }
+
+        [Required]
         public List<string> Roles { get; set; } = [];
     }
 }

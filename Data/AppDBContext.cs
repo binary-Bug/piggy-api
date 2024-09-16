@@ -8,5 +8,7 @@ namespace AngularWebApi.Data
     {
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) { }
         public virtual DbSet<WeatherForecast> WeatherForecasts { get; set; }
+        public virtual DbSet<Region> LURegion { get; set; }
+        public virtual DbSet<UserRegions> UserRegionMap { get; set; }
     }
 }

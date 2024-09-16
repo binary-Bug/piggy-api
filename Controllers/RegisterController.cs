@@ -1,4 +1,5 @@
 ﻿using AngularWebApi.Dtos;
+using AngularWebApi.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,12 @@ namespace AngularWebApi.Controllers
     public class RegisterController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RegionManager _regionManager;
 
-        public RegisterController(UserManager<IdentityUser> userManager)
+        public RegisterController(UserManager<IdentityUser> userManager, RegionManager regionManager)
         {
             _userManager = userManager;
+            _regionManager = regionManager;
         }
 
         [HttpPost("user")]
@@ -23,7 +26,7 @@ namespace AngularWebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new IdentityUser
+            IdentityUser user = new IdentityUser
             {
                 Email = userRegistrationDto.Email,
                 UserName = userRegistrationDto.UserName,
@@ -41,7 +44,11 @@ namespace AngularWebApi.Controllers
             {
                 await _userManager.AddToRoleAsync(user, role);
             }
-            
+
+            var isMapped = await _regionManager.MapUserToRegionAsync(user, userRegistrationDto.RegionId);
+
+            if(!isMapped) return BadRequest("User Could not be mapped to the selected region");
+
             return Ok("Account Created Successfully");
         }
     }

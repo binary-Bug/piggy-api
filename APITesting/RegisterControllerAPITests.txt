@@ -10,6 +10,7 @@ Post Tests:
 				  "userName": "testuser1",
 				  "password": "User1pass!",
 				  "phoneNumber": "1234567890",
+				  "regionId": 1,
 				  "roles": [
 					"User"
 				  ]

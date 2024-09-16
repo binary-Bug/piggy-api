@@ -1,4 +1,5 @@
 using AngularWebApi.Data;
+using AngularWebApi.Repositories;
 using AngularWebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -10,16 +11,27 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// set env in PMC $env:ASPNETCORE_ENVIRONMENT='Local'
 
+//Defining DB Connection strings based on the environment
+if (builder.Environment.IsEnvironment("Local"))
+{
+    var connectionString = builder.Configuration.GetConnectionString("LocalDB");
+    builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connectionString, providerOptions => providerOptions.EnableRetryOnFailure()));
+}
+else
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connectionString));
+}
+
+//Add Repositories
+builder.Services.AddScoped<RegionManager>();
+
+//Add JWT Authentication
 var JWTSetting = builder.Configuration.GetSection("JWTSetting");
-
-builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connectionString));
-
 builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders();
-
 builder.Services.AddScoped<TokenService>();
-
 builder.Services.AddAuthentication(opt => {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -85,7 +97,7 @@ builder.Services.AddSwaggerGen(c => {
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Local"))
 {
     app.UseSwagger();
     app.UseSwaggerUI();
