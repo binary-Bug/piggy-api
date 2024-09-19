@@ -3,9 +3,6 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-#Migrations
-Migrations/
-
 # User-specific files
 *.rsuser
 *.suo
@@ -15,6 +12,9 @@ Migrations/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+
+#Migrations
+Migrations/
 
 # Mono auto generated files
 mono_crash.*
