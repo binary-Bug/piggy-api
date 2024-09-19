@@ -1,5 +1,4 @@
 ﻿using AngularWebApi.Data;
-using AngularWebApi.Migrations;
 using AngularWebApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
