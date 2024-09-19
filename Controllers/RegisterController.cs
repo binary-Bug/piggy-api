@@ -40,10 +40,7 @@ namespace AngularWebApi.Controllers
                 return BadRequest(result.Errors);
             }
 
-            foreach (var role in userRegistrationDto.Roles)
-            {
-                await _userManager.AddToRoleAsync(user, role);
-            }
+            await _userManager.AddToRoleAsync(user, "User");
 
             var isMapped = await _regionManager.MapUserToRegionAsync(user, userRegistrationDto.RegionId);
 

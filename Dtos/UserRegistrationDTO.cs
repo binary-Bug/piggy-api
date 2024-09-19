@@ -19,8 +19,5 @@ namespace AngularWebApi.Dtos
 
         [Required]
         public int RegionId { get; set; }
-
-        [Required]
-        public List<string> Roles { get; set; } = [];
     }
 }
