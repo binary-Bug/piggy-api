@@ -11,13 +11,23 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// set env in PMC $env:ASPNETCORE_ENVIRONMENT='Local'
+// set env in PMC $env:ASPNETCORE_ENVIRONMENT='Local' for Local Migrations
 
 //Defining DB Connection strings based on the environment
 if (builder.Environment.IsEnvironment("Local"))
 {
+    // Code added for local development using localdb
     var connectionString = builder.Configuration.GetConnectionString("LocalDB");
     builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connectionString, providerOptions => providerOptions.EnableRetryOnFailure()));
+    DbContextOptionsBuilder<AppDBContext> ob = new DbContextOptionsBuilder<AppDBContext>();
+    ob.UseSqlServer(connectionString);
+    AppDBContext context = new AppDBContext(ob.Options);
+    Console.WriteLine(context.Database.GetConnectionString());
+    context.Database.GetPendingMigrations().ToList().ForEach(s => Console.WriteLine("pending : "+s));
+    Console.WriteLine("\n");
+    context.Database.Migrate();
+    context.Database.GetAppliedMigrations().ToList().ForEach(s => Console.WriteLine("applied : " + s));
+
 }
 else
 {

@@ -17,14 +17,14 @@ namespace AngularWebApi.Repositories
 
         public async Task<Region?> AddRegionAsync(string region)
         {
-            EntityEntry<Region> addedRegion = await _appDBContext.LURegion.AddAsync(new Region() { Label = region});
+            EntityEntry<Region> addedRegion = await _appDBContext.LURegions.AddAsync(new Region() { Label = region});
             await _appDBContext.SaveChangesAsync();
-            return await _appDBContext.LURegion.FindAsync(addedRegion.Entity.Id);
+            return await _appDBContext.LURegions.FindAsync(addedRegion.Entity.Id);
         }
 
         public IEnumerable<Region> GetRegions()
         {
-            return _appDBContext.LURegion.ToList();
+            return _appDBContext.LURegions.ToList();
         }
 
         public async Task<bool> MapUserToRegionAsync(IdentityUser user, int regionId)

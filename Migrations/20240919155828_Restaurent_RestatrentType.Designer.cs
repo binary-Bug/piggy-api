@@ -4,6 +4,7 @@ using AngularWebApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AngularWebApi.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240919155828_Restaurent_RestatrentType")]
+    partial class Restaurent_RestatrentType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -317,7 +320,7 @@ namespace AngularWebApi.Migrations
             modelBuilder.Entity("AngularWebApi.Models.Restaurent", b =>
                 {
                     b.HasOne("AngularWebApi.Models.RestaurentType", "RestaurentType")
-                        .WithMany()
+                        .WithMany("Restaurents")
                         .HasForeignKey("RestaurentTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -374,6 +377,11 @@ namespace AngularWebApi.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AngularWebApi.Models.RestaurentType", b =>
+                {
+                    b.Navigation("Restaurents");
                 });
 #pragma warning restore 612, 618
         }
