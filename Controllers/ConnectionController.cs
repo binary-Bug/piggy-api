@@ -1,5 +1,6 @@
 ﻿using AngularWebApi.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace AngularWebApi.Controllers
@@ -30,7 +31,8 @@ namespace AngularWebApi.Controllers
             else
             {
                 Console.WriteLine("\nEstablished Database Connection Successfully");
-                return StatusCode(StatusCodes.Status202Accepted, JsonSerializer.Serialize("Connected to DB and API"));
+                return StatusCode(StatusCodes.Status202Accepted, JsonSerializer.Serialize("Connected to DB : " + appDBContext.Database.GetConnectionString().Split(';')[0]
+                    ));
             }
         }
     }
