@@ -11,6 +11,6 @@ namespace AngularWebApi.Models
         [Required]
         public RestaurentType? RestaurentType { get; set; }
         [Required]
-        public int RestaurentOwnerId { get; set; }
+        public string RestaurentOwnerId { get; set; } = string.Empty ;
     }
 }

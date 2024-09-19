@@ -11,8 +11,8 @@ namespace AngularWebApi.Repositories
         private readonly UserManager<IdentityUser> _userManager;
         public RegionManager(UserManager<IdentityUser> userManager, AppDBContext appDBContext) 
         {
-            this._userManager = userManager;
-            this._appDBContext = appDBContext;
+            _userManager = userManager;
+            _appDBContext = appDBContext;
         }
 
         public async Task<Region?> AddRegionAsync(string region)

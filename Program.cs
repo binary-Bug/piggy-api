@@ -37,6 +37,7 @@ else
 
 //Add Repositories
 builder.Services.AddScoped<RegionManager>();
+builder.Services.AddScoped<RestaurentManager>();
 
 //Add JWT Authentication
 var JWTSetting = builder.Configuration.GetSection("JWTSetting");
