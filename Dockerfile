@@ -12,7 +12,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Piggy.Api.csproj", "."]
-RUN dotnet restore "./AngularWebApi.csproj"
+RUN dotnet restore "./Piggy.Api.csproj"
 COPY . .
 WORKDIR "/src/."
 RUN dotnet build "./Piggy.Api.csproj" -c %BUILD_CONFIGURATION% -o /app/build
