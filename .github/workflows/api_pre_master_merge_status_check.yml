@@ -20,9 +20,8 @@ jobs:
     steps:
       - name: Trigger jenkins job
         uses: joshlk/jenkins-githubaction@master
+        if: github.event_name == 'pull_request'
         id: jenkins
-        env:
-            BRANCH: ${{ fromJSON('{"false":"${{ github.ref }}", "true":"${{ github.head_ref }}" }')[github.event_name == 'pull_request'] }}
         with:
           url: "http://binarybug-jenkins.centralindia.cloudapp.azure.com:8080/"
           job_name: "piggy_api_pre_deploy_check"
@@ -30,7 +29,19 @@ jobs:
           timeout: "600"
           interval: "30"
           api_token: ${{ secrets.JENKINS_TOKEN }}
-          parameters: '{"Branch_Name":"${{env.BRANCH}}","MAJOR":"${{env.MAJOR}}","MINOR":"${{env.MINOR}}"}'
+          parameters: '{"Branch_Name":"${{github.head_ref}}","MAJOR":"${{env.MAJOR}}","MINOR":"${{env.MINOR}}"}'
+      - name: Trigger jenkins job
+        uses: joshlk/jenkins-githubaction@master
+        if: github.event_name != 'pull_request'
+        id: jenkins
+        with:
+          url: "http://binarybug-jenkins.centralindia.cloudapp.azure.com:8080/"
+          job_name: "piggy_api_pre_deploy_check"
+          username: "binarybug"
+          timeout: "600"
+          interval: "30"
+          api_token: ${{ secrets.JENKINS_TOKEN }}
+          parameters: '{"Branch_Name":"${{github.ref}}","MAJOR":"${{env.MAJOR}}","MINOR":"${{env.MINOR}}"}'
       - name: Get job url
         run: echo "Job url is ${{ steps.jenkins.outputs.build_url }}"
       - name: Split Build Number From Job URL
@@ -50,13 +61,12 @@ jobs:
         run: |
           echo "${{ steps.calc.outputs.minus }}"
       - name: Create Release
+        if: github.event_name != 'pull_request'
         uses: maxkomarychev/oction-create-release@v0.7.1
-        env:
-            BRANCH: ${{ fromJSON('{"false":"${{ github.ref }}", "true":"${{ github.head_ref }}" }')[github.event_name == 'pull_request'] }}
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           tag_name: v${{env.MAJOR}}.${{env.MINOR}}.${{ steps.calc.outputs.minus }}
-          target_commitish: ${{env.BRANCH}}
-          name: "${{env.BRANCH}} v${{env.MAJOR}}.${{env.MINOR}}.${{ steps.calc.outputs.minus }}"
+          target_commitish: ${{github.ref}}
+          name: "${{github.ref}} v${{env.MAJOR}}.${{env.MINOR}}.${{ steps.calc.outputs.minus }}"
           body: "This Release was created through github actions"
           prerelease: true
