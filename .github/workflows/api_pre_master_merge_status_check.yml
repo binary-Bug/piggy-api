@@ -72,7 +72,7 @@ jobs:
           timeout: "600"
           interval: "30"
           api_token: ${{ secrets.JENKINS_TOKEN }}
-          parameters: '{"Branch_Name":"${{github.head_ref}}","MAJOR":"${{env.MAJOR}}","MINOR":"${{env.MINOR}}"}'
+          parameters: '{"Branch_Name":"ref/heads/${{github.head_ref}}","MAJOR":"${{env.MAJOR}}","MINOR":"${{env.MINOR}}"}'
       - name: Get job url
         run: echo "Job url is ${{ steps.jenkins.outputs.build_url }}"
       - name: Split Build Number From Job URL
@@ -96,7 +96,7 @@ jobs:
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           tag_name: v${{env.MAJOR}}.${{env.MINOR}}.${{ steps.calc.outputs.minus }}
-          target_commitish: ${{github.head_ref}}
-          name: "${{github.head_ref}} v${{env.MAJOR}}.${{env.MINOR}}.${{ steps.calc.outputs.minus }}"
+          target_commitish: "ref/heads/${{github.head_ref}}"
+          name: "ref/heads/${{github.head_ref}} v${{env.MAJOR}}.${{env.MINOR}}.${{ steps.calc.outputs.minus }}"
           body: "This Release was created through github actions"
           prerelease: true
