@@ -12,7 +12,7 @@ on:
 env:
   MAJOR: ${{ vars.MAJOR }}
   MINOR: ${{ vars.MINOR }}
-  BRANCH: fromJSON('[github.ref, github.head_ref]')[github.event_name == 'pull_request']
+  BRANCH: ${{ fromJSON('[github.ref, github.head_ref]')[github.event_name == 'pull_request'] }}
 jobs:
   # This workflow contains a job called "Trigger Jenkins"
   status_check:
