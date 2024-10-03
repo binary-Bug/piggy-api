@@ -22,7 +22,7 @@ jobs:
         uses: joshlk/jenkins-githubaction@master
         id: jenkins
         env:
-            BRANCH: ${{ fromJSON('{"false":github.ref, "true":github.head_ref}')[github.event_name == 'pull_request'] }}
+            BRANCH: ${{ fromJSON('{"false":${{ github.ref }}, "true":${{ github.head_ref }} }')[github.event_name == 'pull_request'] }}
         with:
           url: "http://binarybug-jenkins.centralindia.cloudapp.azure.com:8080/"
           job_name: "piggy_api_pre_deploy_check"
@@ -52,7 +52,7 @@ jobs:
       - name: Create Release
         uses: maxkomarychev/oction-create-release@v0.7.1
         env:
-            BRANCH: ${{ fromJSON('{"false":github.ref, "true":github.head_ref}')[github.event_name == 'pull_request'] }}
+            BRANCH: ${{ fromJSON('{"false":${{ github.ref }}, "true":${{ github.head_ref }} }')[github.event_name == 'pull_request'] }}
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           tag_name: v${{env.MAJOR}}.${{env.MINOR}}.${{ steps.calc.outputs.minus }}
