@@ -12,7 +12,6 @@ on:
 env:
   MAJOR: ${{ vars.MAJOR }}
   MINOR: ${{ vars.MINOR }}
-  BRANCH: ${{ fromJSON('[github.ref, github.head_ref]')[github.event_name == 'pull_request'] }}
 jobs:
   # This workflow contains a job called "Trigger Jenkins"
   status_check:
@@ -22,6 +21,8 @@ jobs:
       - name: Trigger jenkins job
         uses: joshlk/jenkins-githubaction@master
         id: jenkins
+        env:
+            BRANCH: ${{ fromJSON('[github.ref, github.head_ref]')[github.event_name == 'pull_request'] }}
         with:
           url: "http://binarybug-jenkins.centralindia.cloudapp.azure.com:8080/"
           job_name: "piggy_api_pre_deploy_check"
@@ -50,6 +51,8 @@ jobs:
           echo "${{ steps.calc.outputs.minus }}"
       - name: Create Release
         uses: maxkomarychev/oction-create-release@v0.7.1
+        env:
+            BRANCH: ${{ fromJSON('[github.ref, github.head_ref]')[github.event_name == 'pull_request'] }}
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           tag_name: v${{env.MAJOR}}.${{env.MINOR}}.${{ steps.calc.outputs.minus }}
