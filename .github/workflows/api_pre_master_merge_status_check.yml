@@ -14,25 +14,13 @@ env:
   MINOR: ${{ vars.MINOR }}
 jobs:
   # This workflow contains a job called "Trigger Jenkins"
-  status_check:
+  ON_PUSH:
     name: Pre Merge Status Check
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Trigger jenkins job
         uses: joshlk/jenkins-githubaction@master
-        if: github.event_name == 'pull_request'
-        id: jenkins
-        with:
-          url: "http://binarybug-jenkins.centralindia.cloudapp.azure.com:8080/"
-          job_name: "piggy_api_pre_deploy_check"
-          username: "binarybug"
-          timeout: "600"
-          interval: "30"
-          api_token: ${{ secrets.JENKINS_TOKEN }}
-          parameters: '{"Branch_Name":"${{github.head_ref}}","MAJOR":"${{env.MAJOR}}","MINOR":"${{env.MINOR}}"}'
-      - name: Trigger jenkins job
-        uses: joshlk/jenkins-githubaction@master
-        if: github.event_name != 'pull_request'
         id: jenkins
         with:
           url: "http://binarybug-jenkins.centralindia.cloudapp.azure.com:8080/"
@@ -61,12 +49,54 @@ jobs:
         run: |
           echo "${{ steps.calc.outputs.minus }}"
       - name: Create Release
-        if: github.event_name != 'pull_request'
         uses: maxkomarychev/oction-create-release@v0.7.1
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           tag_name: v${{env.MAJOR}}.${{env.MINOR}}.${{ steps.calc.outputs.minus }}
           target_commitish: ${{github.ref}}
           name: "${{github.ref}} v${{env.MAJOR}}.${{env.MINOR}}.${{ steps.calc.outputs.minus }}"
+          body: "This Release was created through github actions"
+          prerelease: true
+  ON_PULL:
+    name: Pre Merge Status Check
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger jenkins job
+        uses: joshlk/jenkins-githubaction@master
+        id: jenkins
+        with:
+          url: "http://binarybug-jenkins.centralindia.cloudapp.azure.com:8080/"
+          job_name: "piggy_api_pre_deploy_check"
+          username: "binarybug"
+          timeout: "600"
+          interval: "30"
+          api_token: ${{ secrets.JENKINS_TOKEN }}
+          parameters: '{"Branch_Name":"${{github.head_ref}}","MAJOR":"${{env.MAJOR}}","MINOR":"${{env.MINOR}}"}'
+      - name: Get job url
+        run: echo "Job url is ${{ steps.jenkins.outputs.build_url }}"
+      - name: Split Build Number From Job URL
+        uses: xom9ikk/split@v1
+        id: split
+        with:
+          string: ${{ steps.jenkins.outputs.build_url }}
+          separator: /
+          limit: -1
+      - name: Calculate Patch Number
+        id: calc
+        uses: yk1028/yk1028-calc-action@v0.0.2
+        with:
+          x: ${{ steps.split.outputs._5 }}
+          y: 1
+      - name: Print Patch Number
+        run: |
+          echo "${{ steps.calc.outputs.minus }}"
+      - name: Create Release
+        uses: maxkomarychev/oction-create-release@v0.7.1
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          tag_name: v${{env.MAJOR}}.${{env.MINOR}}.${{ steps.calc.outputs.minus }}
+          target_commitish: ${{github.head_ref}}
+          name: "${{github.head_ref}} v${{env.MAJOR}}.${{env.MINOR}}.${{ steps.calc.outputs.minus }}"
           body: "This Release was created through github actions"
           prerelease: true
