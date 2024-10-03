@@ -1,0 +1,75 @@
+﻿name: API Master Status Check 🤠
+
+on:
+  push:
+    branches:
+      - "master"
+env:
+  MAJOR: ${{ vars.MAJOR }}
+
+jobs:
+  # This workflow contains a job called "Trigger Jenkins"
+  status_check:
+    name: Master Status Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calculate Minor Version
+        id: minor
+        uses: yk1028/yk1028-calc-action@v0.0.2
+        with:
+          x: ${{ vars.MINOR }}
+          y: 1
+      - uses: actions/checkout@v3
+      - name: Update Minor Version Repo Variable
+        run: |
+          gh variable set MINOR --body "${{steps.minor.outputs.plus}}"
+        env:
+          GITHUB_TOKEN: ${{secrets.PAT_GITHUB_API}}
+      - name: Trigger jenkins reset-job-build-number job
+        uses: joshlk/jenkins-githubaction@master
+        with:
+          url: "http://binarybug-jenkins.centralindia.cloudapp.azure.com:8080/"
+          job_name: "Reset-Job-Build-Number"
+          username: "binarybug"
+          timeout: "10"
+          interval: "3"
+          api_token: ${{ secrets.JENKINS_TOKEN }}
+          parameters: '{"Job":"piggy_api_pre_deploy_check"}'
+      - name: Trigger jenkins status check job
+        uses: joshlk/jenkins-githubaction@master
+        id: jenkins
+        with:
+          url: "http://binarybug-jenkins.centralindia.cloudapp.azure.com:8080/"
+          job_name: "piggy_api_pre_deploy_check"
+          username: "binarybug"
+          timeout: "600"
+          interval: "30"
+          api_token: ${{ secrets.JENKINS_TOKEN }}
+          parameters: '{"Branch_Name":"${{github.ref}}","MAJOR":"${{env.MAJOR}}","MINOR":"${{steps.minor.outputs.plus}}"}'
+      - name: Get Job URL
+        run: echo "Job url is ${{ steps.jenkins.outputs.build_url }}"
+      - name: Split Build Number From Job URL
+        uses: xom9ikk/split@v1
+        id: split
+        with:
+          string: ${{ steps.jenkins.outputs.build_url }}
+          separator: /
+          limit: -1
+      - name: Calculate Patch Number
+        id: calc
+        uses: yk1028/yk1028-calc-action@v0.0.2
+        with:
+          x: ${{ steps.split.outputs._5 }}
+          y: 1
+      - name: Print Patch Number
+        run: |
+          echo "${{ steps.calc.outputs.minus }}"
+      - name: Create Release
+        uses: maxkomarychev/oction-create-release@v0.7.1
+        id: my_step_id
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          tag_name: v${{env.MAJOR}}.${{steps.minor.outputs.plus}}.${{ steps.calc.outputs.minus }}
+          target_commitish: ${{github.ref}}
+          name: "master v${{env.MAJOR}}.${{steps.minor.outputs.plus}}.${{ steps.calc.outputs.minus }}"
+          body: "This Release was created through github actions"
