@@ -30,6 +30,10 @@ namespace AngularWebApi.Repositories
             return await _appDBContext.LURestaurentTypes.FindAsync(restaurentTypeId);
         }
 
+        public IEnumerable<RestaurentType> GetAllRestaurentTypes()
+        {
+            return _appDBContext.LURestaurentTypes.ToList();
+        }
     }
 }
 
