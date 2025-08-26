@@ -3,7 +3,7 @@ API Tester url - https://reqbin.com/
 Post Tests:
 {
 	[post data to db:
-		post url - https://dotnet-sql.azurewebsites.net/api/register/user
+		post url - https://piggy-api.azurewebsites.net/api/register/user
 		post body - 
 				{
 				  "email": "testuser1@mail.com",
@@ -14,7 +14,7 @@ Post Tests:
 				}
 	],
 	[post data to db:
-		post url - https://dotnet-sql.azurewebsites.net/api/register/restaurent
+		post url - https://piggy-api.azurewebsites.net/api/register/restaurent
 		post body - 
 				{
 				  "email": "testowner1@mail.com",

@@ -3,7 +3,7 @@ API Tester url - https://reqbin.com/
 Post Tests:
 {
 	[Get data from db:
-		post url - https://dotnet-sql.azurewebsites.net/api/weatherforecast/post
+		post url - https://piggy-api.azurewebsites.net/api/weatherforecast/post
 		post body - 
 				{
 				"Date":"2024-08-18",
